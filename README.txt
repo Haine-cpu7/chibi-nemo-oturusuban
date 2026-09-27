@@ -11,3 +11,8 @@ GitHub Pages更新方法
 
 画像だけ差し替える場合
 assets/chibi-nemo.png の1ファイルだけをGitHub上の同じ場所へ上書きすればOKです。
+
+
+[favicon について]
+assets/favicon-32x32.png などを追加し、index.html に favicon 設定を入れてあります。
+GitHub Pages ではそのまま動きます。
