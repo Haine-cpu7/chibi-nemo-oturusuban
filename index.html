@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ffd9eb" />
+  <title>ちびねものおるすばん大作戦！</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-sparkles" aria-hidden="true"></div>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand-mini">
+        <span class="brand-paw">🐾</span>
+        <div>
+          <div class="eyebrow">Nemo Collection mini game</div>
+          <strong>ちびねものおるすばん大作戦！</strong>
+        </div>
+      </div>
+      <button id="soundBtn" class="mini-btn" type="button" aria-pressed="true">🔔 SE ON</button>
+    </header>
+
+    <section id="startScreen" class="screen active">
+      <div class="title-card">
+        <div class="title-left">
+          <div class="logo-wrap">
+            <div class="logo-small">🐾 ちびねもの</div>
+            <div class="logo-main">おるすばん<br><span>大作戦！</span></div>
+            <div class="tagline">⏰ ねもちゃんが帰ってくるまで、あと3時間…！</div>
+          </div>
+
+          <div class="menu-stack">
+            <button id="startBtn" class="menu-btn pink" type="button"><span>▶</span> はじめる <b>🐾</b></button>
+            <button id="howBtn" class="menu-btn blue" type="button"><span>?</span> あそびかた <b>🐾</b></button>
+          </div>
+
+          <div class="title-note">
+            <b>「いい子にしててね」</b>
+            <span>ちびねも「うん！」</span>
+            <em>……3秒後。</em>
+          </div>
+
+          <div class="record-badge">
+            <span>🏆 おるすばん記録</span>
+            <strong id="recordText">初めてのおるすばん。たぶん大丈夫。</strong>
+          </div>
+        </div>
+
+        <div class="title-right">
+          <div class="speech-bubble">いい子に<br>してるもん！♡</div>
+          <div class="personality-tags">
+            <span>わがまま</span><span>おてんば</span><span>いたずらっこ</span><span>しらない。♡</span>
+          </div>
+          <div class="hero-frame">
+            <img src="assets/chibi-nemo.png" alt="ちびねも" />
+          </div>
+          <div class="prop prop1">🍮</div>
+          <div class="prop prop2">🪏</div>
+          <div class="prop prop3">🐾</div>
+          <div class="prop prop4">💗</div>
+        </div>
+      </div>
+
+      <div class="mini-rules">
+        <div><span>🎉</span><b>たのしさ</b><small>たくさん遊ぶほどアップ</small></div>
+        <div><span>🧹</span><b>ちらかり</b><small>証拠を残すほど増える</small></div>
+        <div><span>👀</span><b>バレ度</b><small>上がりすぎると大ピンチ</small></div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="game-banner">
+        <div>
+          <span id="phaseKicker">① いたずらフェーズ</span>
+          <h2 id="phaseTitle">やりたいことをえらんで、いたずらしよう！</h2>
+        </div>
+        <div class="time-card">
+          <span>ねもちゃん帰宅まで</span>
+          <strong id="clock">17:00</strong>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <section class="play-card">
+          <div class="scene-top">
+            <div class="portrait-panel" id="portraitPanel">
+              <img id="statusPortrait" src="assets/chibi-nemo.png" alt="ちびねも" />
+              <div class="portrait-speech" id="statusComment">「やっぱりプリンはさいこう〜♡」</div>
+            </div>
+
+            <div class="meters-card">
+              <div class="meter-row"><span>🎉 たのしさ</span><div class="meter pink"><i id="funBar"></i></div><b id="funVal">0</b></div>
+              <div class="meter-row"><span>🧹 ちらかり</span><div class="meter yellow"><i id="messBar"></i></div><b id="messVal">0</b></div>
+              <div class="meter-row"><span>👀 バレ度</span><div class="meter purple"><i id="riskBar"></i></div><b id="riskVal">0</b></div>
+              <div class="turn-chip" id="turnLabel">1 / 5</div>
+            </div>
+          </div>
+
+          <div class="phase-note" id="phaseDesc">1回の行動で30分。やりたいことを選ぼう。</div>
+          <div id="actions" class="action-grid"></div>
+        </section>
+
+        <aside class="side-column">
+          <section class="cute-panel promise-panel">
+            <div class="panel-title">📌 今日の約束</div>
+            <div id="forbiddenRule" class="forbidden-rule"></div>
+          </section>
+
+          <section class="cute-panel">
+            <div class="panel-title">🕵️ 残っている証拠</div>
+            <div id="evidenceList" class="evidence-list"><span class="muted">まだ何もないよ。</span></div>
+          </section>
+
+          <section class="cute-panel log-panel">
+            <div class="panel-title">📖 ちびねも日誌</div>
+            <div id="log" class="log"></div>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section id="eventModal" class="modal" aria-hidden="true">
+      <div class="modal-card event-card">
+        <div id="eventIcon" class="event-icon">✨</div>
+        <span class="pill">できごと</span>
+        <h2 id="eventTitle"></h2>
+        <p id="eventText"></p>
+        <button id="eventCloseBtn" class="menu-btn pink compact" type="button">つづける 🐾</button>
+      </div>
+    </section>
+
+    <section id="howModal" class="modal" aria-hidden="true">
+      <div class="modal-card how-card">
+        <button id="howCloseBtn" class="close-btn" type="button">×</button>
+        <span class="pill">あそびかた</span>
+        <h2>いたずらして、かくして、バレないように…！</h2>
+        <div class="how-steps">
+          <div><strong>① いたずら</strong><span>好きな行動を選んで、たのしさを稼ごう。</span></div>
+          <div><strong>② 証拠隠滅</strong><span>19:30になったら、残った証拠を3回だけ片付けられる。</span></div>
+          <div><strong>③ エンディング</strong><span>20:00。ねもちゃん帰宅。最後の言い訳で運命が決まる。</span></div>
+        </div>
+        <p class="how-warning">⚠️ 「今日の約束」を破ると、バレ度が大きく上がります。</p>
+      </div>
+    </section>
+
+    <section id="judgementScreen" class="screen">
+      <div class="ending-shell">
+        <div class="ending-header">③ エンディング</div>
+        <div class="judgement-card">
+          <div class="return-time">20:00　玄関</div>
+          <h2>「ただいまー」</h2>
+          <p class="door-sfx">ガチャ。</p>
+          <div class="judgement-visual">
+            <img src="assets/chibi-nemo.png" alt="ちびねも" />
+            <div class="judgement-dialogue">
+              <p>ねもちゃん「…………」</p>
+              <p>ちびねも「…………」</p>
+            </div>
+          </div>
+          <h3>最後のひとこと</h3>
+          <p class="phase-desc">残っている証拠に合わせて、ひとつだけ選べます。</p>
+          <div id="excuses" class="excuse-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen">
+      <div class="ending-shell">
+        <div class="ending-header">RESULT</div>
+        <div class="result-card">
+          <div class="result-top">
+            <img src="assets/chibi-nemo.png" alt="ちびねも" />
+            <div>
+              <div id="resultIcon" class="result-icon">🏆</div>
+              <span id="resultBadge" class="pill">ENDING</span>
+              <h2 id="resultTitle">完全犯罪</h2>
+              <p id="resultQuote" class="result-quote"></p>
+            </div>
+          </div>
+          <div id="resultStory" class="result-story"></div>
+          <div class="result-stats">
+            <div><span>🎉 たのしさ</span><b id="finalFun">0</b></div>
+            <div><span>🧹 残ったちらかり</span><b id="finalMess">0</b></div>
+            <div><span>👀 最終バレ度</span><b id="finalRisk">0</b></div>
+            <div><span>🔎 残った証拠</span><b id="finalEvidence">0</b></div>
+          </div>
+          <div id="resultHint" class="result-hint"></div>
+          <div class="result-buttons">
+            <button id="retryBtn" class="menu-btn pink compact" type="button">もう1回やらかす 🐾</button>
+            <button id="homeBtn" class="menu-btn blue compact" type="button">タイトルへ</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>ちびねもは今日も元気です。たぶん。</footer>
+  <script src="script.js"></script>
+</body>
+</html>
