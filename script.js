@@ -100,6 +100,7 @@ function resetState(){
     maxTurns:5,
     fun:0,
     mess:0,
+    peakMess:0,
     risk:0,
     evidence:[],
     logs:[],
@@ -201,7 +202,7 @@ function showEvent(icon,title,text){
 function doMischief(id){
   const a=mischiefPool.find(x=>x.id===id); if(!a)return;
   const forbidden=a.forbiddenKey===state.rule.key;
-  state.fun=clamp(state.fun+a.fun,0,130); state.mess=clamp(state.mess+a.mess,0,130); state.risk=clamp(state.risk+a.risk+(forbidden?15:0),0,130);
+  state.fun=clamp(state.fun+a.fun,0,130); state.mess=clamp(state.mess+a.mess,0,130); state.peakMess=Math.max(state.peakMess,state.mess); state.risk=clamp(state.risk+a.risk+(forbidden?15:0),0,130);
   addEvidence(a.evidence); state.actionHistory.push(a.id);
   if(forbidden){state.touchedForbidden=true; addLog(`【約束やぶり】${a.log}`);} else addLog(a.log);
   state.time+=30; state.turn++; beep(forbidden?220:620,.08);
@@ -214,13 +215,13 @@ function doMischief(id){
 
 function triggerRandomEvent(){
   const e={...randomEvents[Math.floor(Math.random()*randomEvents.length)]};
-  if(e.fun) state.fun=clamp(state.fun+e.fun,0,130); if(e.mess) state.mess=clamp(state.mess+e.mess,0,130); if(e.risk) state.risk=clamp(state.risk+e.risk,0,130); if(e.evidence)addEvidence([e.evidence]);
+  if(e.fun) state.fun=clamp(state.fun+e.fun,0,130); if(e.mess) state.mess=clamp(state.mess+e.mess,0,130); state.peakMess=Math.max(state.peakMess,state.mess); if(e.risk) state.risk=clamp(state.risk+e.risk,0,130); if(e.evidence)addEvidence([e.evidence]);
   addLog(e.title+'。'+e.text); showEvent(e.icon,e.title,e.text);
 }
 
 function triggerRareEvent(){
   const e=rareEvents[Math.floor(Math.random()*rareEvents.length)];
-  state.rareEventTriggered=true; state.rareEventId=e.id; e.apply(state); addLog(`【レア】${e.title}。${e.text}`); showEvent(e.icon,e.title,e.text); beep(940,.11);
+  state.rareEventTriggered=true; state.rareEventId=e.id; e.apply(state); state.peakMess=Math.max(state.peakMess,state.mess); addLog(`【レア】${e.title}。${e.text}`); showEvent(e.icon,e.title,e.text); beep(940,.11);
 }
 
 function beginEarlyReturn(){
@@ -267,20 +268,22 @@ function chooseEnding(excuseId){
   const did=(id)=>state.actionHistory.includes(id);
   const has=(rx)=>state.evidence.some(e=>rx.test(e));
 
-  if(state.fun>=125 && state.mess>=95) return 'legend';
-  if(state.earlyReturnTriggered && (ev>=2 || state.risk>=55)) return 'early';
-  if(did('pudding') && !has(/プリン/) && state.risk<48 && state.mess<45) return 'puddingCase';
-  if(did('fish') && !has(/金魚鉢|濡れたタオル/) && state.risk<55) return 'fishTea';
-  if(excuseId==='confess' && ev<=2 && state.risk<55) return 'honest';
-  if(!state.touchedForbidden && state.fun>=90 && ev<=1 && state.risk<58) return 'promiseKeeper';
-  if(ev===0 && state.risk>=70) return 'miracle';
-  if(state.touchedForbidden && (state.risk>=85 || ev>=4 || state.mess>=85)) return 'disaster';
-  if(ev===0 && state.risk<35 && state.mess<28) return 'perfect';
-  if(excuseId==='cleaning' && state.cleanupCount>=2 && state.mess<30 && state.risk<55) return 'reverse';
-  if(ev<=1 && state.risk<62) return 'suspicion';
+  // ルート系エンディングを先に判定。狙って遊べばちゃんと到達できる設計。
+  if(state.earlyReturnTriggered) return 'early';
+  if(state.fun>=120 && state.peakMess>=80) return 'legend';
+  if(did('pudding') && !has(/プリン/) && state.risk<70) return 'puddingCase';
+  if(did('fish') && !has(/金魚鉢|濡れたタオル/) && state.risk<75) return 'fishTea';
+  if(excuseId==='cleaning' && state.cleanupCount>=2 && state.mess<45 && state.risk<75) return 'reverse';
+  if(excuseId==='confess' && state.risk<80) return 'honest';
+  if(!state.touchedForbidden && state.fun>=85 && state.risk<75) return 'promiseKeeper';
+  if(ev<=2 && state.risk>=65) return 'miracle';
+
+  // 通常エンディング。証拠数の条件を現実的な範囲へ緩和。
+  if(state.touchedForbidden && (state.risk>=80 || ev>=4 || state.peakMess>=90)) return 'disaster';
+  if(ev<=2 && state.risk<55 && state.mess<50) return 'perfect';
+  if(ev<=3 && state.risk<75) return 'suspicion';
   return 'caught';
 }
-
 function finishGame(excuseId){
   const ex=excusePool.find(e=>e.id===excuseId); if(ex) state.risk=clamp(state.risk+ex.risk,0,130);
   const ending=chooseEnding(excuseId); state.result=ending;
@@ -346,7 +349,7 @@ function renderGallery(){
   const endings=JSON.parse(localStorage.getItem('chibiNemoEndings')||'{}');
   $('#galleryGrid').innerHTML=Object.entries(endingData).map(([key,d])=>{
     const count=endings[key]||0; const unlocked=count>0;
-    return `<div class="ending-tile ${unlocked?'':'locked'}"><span class="ending-no">${d.badge}</span><span class="ending-icon">${unlocked?d.icon:'❔'}</span><b>${unlocked?d.title:'？？？？？？'}</b><small>${unlocked?d.hint:'まだ見つけていないエンディング'}</small><span class="count">${unlocked?`発見 ${count}回`:'未発見'}</span></div>`;
+    return `<div class="ending-tile ${unlocked?'':'locked'}"><span class="ending-no">${d.badge}</span><span class="ending-icon">${unlocked?d.icon:'❔'}</span><b>${unlocked?d.title:'？？？？？？'}</b><small>${unlocked?d.hint:`ヒント：${d.hint}`}</small><span class="count">${unlocked?`発見 ${count}回`:'未発見'}</span></div>`;
   }).join('');
 }
 function openGallery(){renderGallery();$('#galleryModal').classList.add('open');$('#galleryModal').setAttribute('aria-hidden','false');}
