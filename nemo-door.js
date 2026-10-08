@@ -46,9 +46,6 @@
     #nemo-door-widget .nd-launch:hover { transform: translateY(-2px); box-shadow:0 7px 22px rgba(129,69,97,.28); }
     #nemo-door-widget .nd-launch:focus-visible, #nemo-door-widget a:focus-visible,
     #nemo-door-widget .nd-close:focus-visible { outline:3px solid #9778d5; outline-offset:3px; }
-    #nemo-door-widget .nd-label { position:absolute; right:54px; top:9px; font-size:12px; white-space:nowrap;
-      font-weight:700; color:#8a5671; background:rgba(255,252,254,.94); padding:5px 10px; border-radius:20px;
-      box-shadow:0 3px 12px rgba(129,69,97,.12); border:1px solid #f3dce7; }
     #nemo-door-widget .nd-backdrop { position:fixed; inset:0; z-index:9500; display:none;
       align-items:center; justify-content:center; padding: max(14px,env(safe-area-inset-top,0px)) 14px max(14px,env(safe-area-inset-bottom,0px));
       background:rgba(52,37,56,.48); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
@@ -86,7 +83,6 @@
     #nemo-door-widget .nd-note {margin:9px 0 0;font-size:10px;color:#ab9ba5;}
     @media (max-width:480px) {
       #nemo-door-widget .nd-launch { top: max(80px,calc(env(safe-area-inset-top, 0px) + 69px)); width:43px;height:43px;font-size:21px; }
-      #nemo-door-widget .nd-label {display:none;}
       #nemo-door-widget .nd-panel {padding:21px 15px 17px; border-radius:22px;}
     }
     @media (prefers-reduced-motion:reduce){#nemo-door-widget .nd-launch,#nemo-door-widget .nd-link{transition:none;}}
@@ -104,7 +100,7 @@
   launch.setAttribute('aria-label', 'ねもの扉を開く');
   launch.setAttribute('aria-expanded', 'false');
   launch.setAttribute('aria-controls', 'nemo-door-dialog');
-  launch.innerHTML = '<span aria-hidden="true">🐾</span><span class="nd-label">ねもの扉</span>';
+  launch.innerHTML = '<span aria-hidden="true">🐾</span>';
 
   const backdrop = document.createElement('div');
   backdrop.className = 'nd-backdrop';
