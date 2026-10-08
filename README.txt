@@ -1,18 +1,16 @@
-ちびねものおるすばん大作戦！ WEB版 v1.2
+NEMO Collection SEO Starter 2026-10-08
+対象: https://github.com/Haine-cpu7/chibi-nemo-oturusuban
 
-変更点
-- ちびねも画像をゲーム用の透過PNGへ差し替え
-- タイトル / ゲーム中 / エンディングで同じ新ちびねもを使用
-- v1.1 のゲーム内容・UI・セーブ仕様はそのまま
+アップロードするのは、このZIP内のファイルのみです。
+index.html と sitemap.xml。既存の script.js / nemo-door.js / style.css / assets はそのまま。
 
-GitHub Pages更新方法
-1. このZIPを展開
-2. リポジトリ直下へ中身をアップロードして既存ファイルを置き換える
+操作: GitHubの該当リポジトリの一番上（ルート）にアップロード → Commit changes。
+ほかのリポジトリにはアップロードしないでください。
 
-画像だけ差し替える場合
-assets/chibi-nemo.png の1ファイルだけをGitHub上の同じ場所へ上書きすればOKです。
+【重要】
+最新公開版のHTMLを基準に検索用文章・HTML内リンクのみを修正。
+ゲーム本体・NFT/ウォレット・セーブ処理は変更しません。
+GitHubでその後にindex.htmlが更新されていたら、古い版で上書きしないでください。
 
-
-[favicon について]
-assets/favicon-32x32.png などを追加し、index.html に favicon 設定を入れてあります。
-GitHub Pages ではそのまま動きます。
+Search Consoleの登録作業やGoogleのインデックス反映は別途必要です。
+検索上位表示やアクセス増加を保証するものではありません。
